@@ -85,6 +85,32 @@ public class CatScriptParser {
         return parseEqualityExpression();
     }
 
+    private Expression parseEqualityExpression(){
+        Expression expression = parseComparisonExpression();
+        while(tokens.match(BANG_EQUAL, EQUAL)){
+            Token operator = tokens.consumeToken();
+            Expression rhs = parseComparisonExpression();
+            EqualityExpression equalityExpression = new EqualityExpression(operator, expression, rhs);
+            equalityExpression.setStart(expression.getStart());
+            equalityExpression.setEnd(rhs.getEnd());
+            expression = equalityExpression;
+        }
+        return expression;
+    }
+
+    private Expression parseComparisonExpression(){
+        Expression expression = parseAdditiveExpression();
+        if(tokens.match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)){
+            Token operator = tokens.consumeToken();
+            Expression rhs = parseAdditiveExpression();
+            ComparisonExpression comparisonExpression = new ComparisonExpression(operator, expression, rhs);
+            comparisonExpression.setStart(expression.getStart());
+            comparisonExpression.setEnd(rhs.getEnd());
+            expression = comparisonExpression;
+        }
+        return expression;
+    }
+
     private Expression parseAdditiveExpression() {
         Expression expression = parseUnaryExpression();
         while (tokens.match(PLUS, MINUS)) {
@@ -94,6 +120,19 @@ public class CatScriptParser {
             additiveExpression.setStart(expression.getStart());
             additiveExpression.setEnd(rightHandSide.getEnd());
             expression = additiveExpression;
+        }
+        return expression;
+    }
+
+    private Expression parseFactorExpression(){
+        Expression expression = parseUnaryExpression();
+        while(tokens.match(SLASH, STAR)){
+            Token operator = tokens.consumeToken();
+            Expression rhs = parseUnaryExpression();
+            FactorExpression factorExpression = new FactorExpression(operator, expression, rhs);
+            factorExpression.setStart(expression.getStart());
+            factorExpression.setEnd(rhs.getEnd());
+            expression = factorExpression;
         }
         return expression;
     }
@@ -122,45 +161,6 @@ public class CatScriptParser {
             syntaxErrorExpression.setToken(tokens.consumeToken());
             return syntaxErrorExpression;
         }
-    }
-
-    private Expression parseEqualityExpression(){
-        Expression expression = parseComparisonExpression();
-        while(tokens.match(BANG_EQUAL, EQUAL)){
-            Token operator = tokens.consumeToken();
-            Expression rhs = parseComparisonExpression();
-            EqualityExpression equalityExpression = new EqualityExpression(operator, expression, rhs);
-            equalityExpression.setStart(expression.getStart());
-            equalityExpression.setEnd(rhs.getEnd());
-            expression = equalityExpression;
-        }
-        return expression;
-    }
-
-    private Expression parseFactorExpression(){
-        Expression expression = parseUnaryExpression();
-        while(tokens.match(SLASH, STAR)){
-            Token operator = tokens.consumeToken();
-            Expression rhs = parseUnaryExpression();
-            FactorExpression factorExpression = new FactorExpression(operator, expression, rhs);
-            factorExpression.setStart(expression.getStart());
-            factorExpression.setEnd(rhs.getEnd());
-            expression = factorExpression;
-        }
-        return expression;
-    }
-
-    private Expression parseComparisonExpression(){
-        Expression expression = parseAdditiveExpression();
-        if(tokens.match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)){
-            Token operator = tokens.consumeToken();
-            Expression rhs = parseAdditiveExpression();
-            ComparisonExpression comparisonExpression = new ComparisonExpression(operator, expression, rhs);
-            comparisonExpression.setStart(expression.getStart());
-            comparisonExpression.setEnd(rhs.getEnd());
-            expression = comparisonExpression;
-        }
-        return expression;
     }
 
     //============================================================
