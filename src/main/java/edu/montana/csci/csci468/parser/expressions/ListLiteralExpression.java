@@ -3,8 +3,10 @@ package edu.montana.csci.csci468.parser.expressions;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.SymbolTable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,8 +31,13 @@ public class ListLiteralExpression extends Expression {
             value.validate(symbolTable);
         }
         if (values.size() > 0) {
-            // TODO - generalize this looking at all objects in list
-            type = CatscriptType.getListType(values.get(0).getType());
+            CatscriptType temp = values.get(0).getType();
+            for(int i = 1; i < values.size(); i++){
+                if(values.get(i).getType() != temp){
+                    addError(ErrorType.INCOMPATIBLE_TYPES);
+                }
+            }
+            type = CatscriptType.getListType(temp);
         } else {
             type = CatscriptType.getListType(CatscriptType.OBJECT);
         }
@@ -47,7 +54,11 @@ public class ListLiteralExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        return super.evaluate(runtime);
+        ArrayList<Object> list = new ArrayList<>();
+        for(Expression expression : values){
+            list.add(expression.evaluate(runtime));
+        }
+        return list;
     }
 
     @Override
