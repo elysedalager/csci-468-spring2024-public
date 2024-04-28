@@ -7,9 +7,12 @@ import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Iterator;
 
 public class ForStatement extends Statement {
     private Expression expression;
@@ -89,7 +92,35 @@ public class ForStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        super.compile(code);
+        Integer iterSlot = code.nextLocalStorageSlot();
+        Label iterStart = new Label();
+        Label end = new Label();
+
+        expression.compile(code);
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(List.class), "iterator", "()Ljava/util/Iterator;");
+        code.addVarInstruction(Opcodes.ASTORE, iterSlot);
+        code.addLabel(iterStart);
+        code.addVarInstruction(Opcodes.ALOAD, iterSlot);
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(Iterator.class), "hasNext", "()Z");
+        code.addJumpInstruction(Opcodes.IFEQ, end);
+
+        CatscriptType componenetType = getComponentType();
+        code.addVarInstruction(Opcodes.ALOAD, iterSlot);
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(Iterator.class), "next", "()Ljava/lang/Object;");
+        code.addTypeInstruction(Opcodes.CHECKCAST, ByteCodeGenerator.internalNameFor(componenetType.getJavaType()));
+        unbox(code,componenetType);
+
+        Integer var = code.createLocalStorageSlotFor(variableName);
+        if (componenetType == CatscriptType.INT || componenetType == CatscriptType.BOOLEAN){
+            code.addVarInstruction(Opcodes.ISTORE, var);
+        } else {
+            code.addVarInstruction(Opcodes.ASTORE, var);
+        }
+        for (Statement stmt : body){
+            stmt.compile(code);
+        }
+        code.addJumpInstruction(Opcodes.GOTO, iterStart);
+        code.addLabel(end);
     }
 
 }

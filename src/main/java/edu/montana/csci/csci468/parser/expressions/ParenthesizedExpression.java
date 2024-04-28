@@ -49,5 +49,4 @@ public class ParenthesizedExpression extends Expression {
     public void compile(ByteCodeGenerator code) {
         expression.compile(code);
     }
-
 }
