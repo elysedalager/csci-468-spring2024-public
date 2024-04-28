@@ -1,0 +1,4 @@
+Errors:
+
+- Missing source zip
+- Missing elyse_dalager_portfolio.pdf
