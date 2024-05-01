@@ -1,33 +1,27 @@
 package edu.montana.csci.csci468.demo;
 
 import edu.montana.csci.csci468.CatscriptTestBase;
-import edu.montana.csci.csci468.parser.expressions.*;
-import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static edu.montana.csci.csci468.tokenizer.TokenType.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PartnerTests extends CatscriptTestBase {
-
     @Test
-    public void parseEqualityAdditiveExpression() {
-        EqualityExpression expr = parseExpression("(1 + 1) == (0 + 2)");
-        assertTrue(expr.getLeftHandSide() instanceof ParenthesizedExpression);
-        assertTrue(expr.getRightHandSide() instanceof ParenthesizedExpression);
-        assertTrue(expr.isEqual());
+    public void tokenizeIfWorks(){
+        assertTokensAre("if (x = 10) { print(1) }",
+                IF, LEFT_PAREN, IDENTIFIER, EQUAL, INTEGER, RIGHT_PAREN, LEFT_BRACE, PRINT,
+                LEFT_PAREN, INTEGER, RIGHT_PAREN, RIGHT_BRACE, EOF);
     }
 
     @Test
-    public void parseListLiteralAdditiveExpression(){
-        ListLiteralExpression expr = parseExpression("[[0, 1], [2]]");
-        assertEquals(2, expr.getValues().size());
-        ListLiteralExpression innerList = (ListLiteralExpression) expr.getValues().get(0);
-        assertEquals(2, innerList.getValues().size());
+    void objectsInListsPrint() {
+        assertEquals("true\nfalse\nfalse\n", executeProgram("for(x in [true, false, false]) { print(x) }"));
     }
 
     @Test
-    public void parseUnaryExpression() {
-        UnaryExpression expr = parseExpression("not not not true");
-        assertTrue(expr.isNot());
-        assertTrue(expr.getRightHandSide() instanceof UnaryExpression);
+    void reallyGoingToTryMath() {
+        assertEquals(55, evaluateExpression("1 * 4 / 2 + 5 * 12 - 7"));
+        assertEquals(5, evaluateExpression("1 * (4 / (2 + 2)) * 12 - 7"));
+        assertEquals(27, evaluateExpression("1 * 4 / 2 + 5 * (12 - 7)"));
     }
 }
