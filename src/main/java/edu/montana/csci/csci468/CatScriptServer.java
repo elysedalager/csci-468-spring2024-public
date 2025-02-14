@@ -38,7 +38,7 @@ class CatScriptServer {
                 code = Files.lines(path).collect(Collectors.joining("\n"));
             } else {
                 code = "\n" +
-                        "  // welcome to cs446!!!\n" +
+                        "  // welcome to cs468!!!\n" +
                         "  var x = \"hello catscript!\"\n" +
                         "  print(x)\n";
             }

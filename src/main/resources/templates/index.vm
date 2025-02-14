@@ -1,6 +1,6 @@
 #parse('templates/header.vm')
 
-<p>Welcome to CS 446!  This web interface will provide you an easy way to interact with the CatScript compiler you
+<p>Welcome to CS 468!  This web interface will provide you an easy way to interact with the CatScript compiler you
     are developing.  Enjoy!</p>
 
 <div>
@@ -25,8 +25,8 @@
     <button hx-get="/tokenize">Tokenize</button>
     <button hx-get="/parse">Parse</button>
     <button hx-get="/evaluate">Evaluate</button>
-    <button hx-get="/transpile">Transpile</button>
-    <button hx-get="/compile">Compile</button>
+##    <button hx-get="/transpile">Transpile</button>
+##    <button hx-get="/compile">Compile</button>
 </div>
 
 <form style="margin-top: 8px">
@@ -34,6 +34,7 @@
     <select name="file">
         <option value=""></option>
         <option value="demo.cat">demo.cat</option>
+        <option value="MCAConnectDemo.cat">MCAConnectDemo.cat</option>
     </select>
     <button>Load</button>
 </form>

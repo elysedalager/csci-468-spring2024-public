@@ -14,12 +14,12 @@
     </style>
     <script src="https://unpkg.io/htmx.org@0.3.0/dist/htmx.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q==" crossorigin="anonymous"></script>
-    <title>Hello CSCI 466</title>
+    <title>Hello CSCI 468</title>
 </head>
 <body>
 <main>
 
-    <h1><img src="https://avatars2.githubusercontent.com/u/67816555?s=50&v=4"> CS 466 - Compilers</h1>
+    <h1><img src="https://avatars2.githubusercontent.com/u/67816555?s=50&v=4"> CS 468 - Compilers</h1>
 
     <h4 style="color:green">$!message</h4>
     <h4 style="color:red">$!error</h4>

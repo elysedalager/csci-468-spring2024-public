@@ -1,0 +1,14 @@
+var x  = "hello catscript!"
+print(x)
+
+function foo(z : int, y : int) {
+    if (z > y){
+        print(z)
+    } else {
+        print(y)
+    }
+}
+
+foo(3, 27)
+foo(45, 5)
+
